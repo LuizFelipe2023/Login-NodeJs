@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+
+        <a href="login.html">Ja tem Conta? Pressione aqui para ser direcionada a pagina de login</a>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            try {
+                const response = await fetch("http://localhost:3000/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password, confirmPassword })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("message").textContent = "Usuário registrado com sucesso!";
+                    window.location.href = "login.html";
+                } else {
+                    document.getElementById("message").textContent = data.error;
+                }
+            } catch (error) {
+                console.error("Erro durante o registro:", error);
+                document.getElementById("message").textContent = "Erro durante o registro. Tente novamente mais tarde.";
+            }
+        });
+    </script>
+</body>
+
+</html>
